@@ -1,44 +1,95 @@
-/* Reset default margins and padding */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Style the body for a clean look */
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    padding: 20px;
-  }
-  
-  /* Style the heading */
-  h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  /* Style the books list container */
-  #books-list {
-    list-style: none;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  /* Style each book item */
-  #books-list li {
-    background-color: #fff;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-    color: #555;
-    transition: transform 0.2s;
-  }
-  
-  /* Add a hover effect */
-  #books-list li:hover {
-    transform: scale(1.02);
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: lightgray;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: darkgray;
+  margin-bottom: 20px;
+}
+
+#login-page {
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+#role-select {
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: darkblue;
+}
+
+#books-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#admin-controls {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#admin-controls input {
+  padding: 10px;
+  width: 25%;
+  font-size: 16px;
+  border: 1px solid silver;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+#books-list {
+  list-style: none;
+}
+
+#books-list li {
+  background-color: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  color: gray;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+#books-list li:hover {
+  transform: scale(1.02);
+}
+
+#books-list li button {
+  background-color: red;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+#books-list li button:hover {
+  background-color: darkred;
+}
