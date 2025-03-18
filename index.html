@@ -2,25 +2,110 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Books List</title>
-  <link rel="stylesheet" href="style.css"> <!-- Link to CSS file -->
+  <title>Books App</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Books</h1>
-  <ul id="books-list"></ul>
+  <!-- Login Page -->
+  <div id="login-page">
+    <h1>Login</h1>
+    <select id="role-select">
+      <option value="viewer">Viewer</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="login()">Enter</button>
+  </div>
+
+  <!-- Books Page -->
+  <div id="books-page" style="display: none;">
+    <h1>Books</h1>
+    <div id="admin-controls" style="display: none;">
+      <input type="text" id="new-book-title" placeholder="Enter book title">
+      <input type="text" id="new-book-author" placeholder="Enter author">
+      <input type="number" id="new-book-year" placeholder="Enter year (optional)">
+      <button onclick="addBook()">Add Book</button>
+    </div>
+    <ul id="books-list"></ul>
+  </div>
 
   <script>
-    fetch('http://localhost:3000/books')
-      .then(response => response.json())
-      .then(books => {
-        const list = document.getElementById('books-list');
-        books.forEach(book => {
-          const li = document.createElement('li');
-          li.textContent = book.title;
-          list.appendChild(li);
-        });
+    let currentRole = null; // Track user role
+
+    /* Login: Switch to books page and set role */
+    function login() {
+      currentRole = document.getElementById('role-select').value;
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('books-page').style.display = 'block';
+      if (currentRole === 'admin') {
+        document.getElementById('admin-controls').style.display = 'block';
+      }
+      loadBooks();
+    }
+
+    /* Load and display books */
+    function loadBooks() {
+      fetch('http://localhost:3000/books')
+        .then(response => {
+          if (!response.ok) throw new Error('Fetch failed');
+          return response.json();
+        })
+        .then(books => {
+          const list = document.getElementById('books-list');
+          list.innerHTML = ''; // Clear list
+          books.forEach(book => {
+            const li = document.createElement('li');
+            li.textContent = `${book.title} by ${book.author}${book.publication_year ? ` (${book.publication_year})` : ''}`;
+            if (currentRole === 'admin') {
+              const deleteBtn = document.createElement('button');
+              deleteBtn.textContent = 'Delete';
+              deleteBtn.onclick = () => deleteBook(book.id);
+              li.appendChild(deleteBtn);
+            }
+            list.appendChild(li);
+          });
+        })
+        .catch(error => console.error('Load books error:', error));
+    }
+
+    /* Add a book with all fields */
+    function addBook() {
+      const title = document.getElementById('new-book-title').value.trim();
+      const author = document.getElementById('new-book-author').value.trim();
+      const publication_year = document.getElementById('new-book-year').value || null;
+      if (!title || !author) return alert('Title and author are required');
+      fetch('http://localhost:3000/books', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, author, publication_year })
       })
-      .catch(error => console.error('Fetch error:', error));
+        .then(response => {
+          if (!response.ok) throw new Error('Add book failed');
+          return response.json();
+        })
+        .then(data => {
+          console.log('Added book:', data);
+          document.getElementById('new-book-title').value = '';
+          document.getElementById('new-book-author').value = '';
+          document.getElementById('new-book-year').value = '';
+          loadBooks();
+        })
+        .catch(error => {
+          console.error('Add book error:', error);
+          alert('Failed to add book');
+        });
+    }
+
+    /* Delete a book */
+    function deleteBook(id) {
+      fetch(`http://localhost:3000/books/${id}`, {
+        method: 'DELETE'
+      })
+        .then(response => {
+          if (!response.ok) throw new Error('Delete failed');
+          loadBooks();
+        })
+        .catch(error => console.error('Delete error:', error));
+    }
   </script>
 </body>
 </html>
